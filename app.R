@@ -1,6 +1,8 @@
 # Now we add theming - the fun part!
 # Also added scrollable side panel - convenient!
 
+test tes
+
 # Load libraries - add bslib. I also needed to update shiny.
 
 # After this step, publish to shinyapps.io to make sure it works.
