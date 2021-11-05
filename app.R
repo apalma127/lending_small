@@ -1,8 +1,6 @@
 # Now we add theming - the fun part!
 # Also added scrollable side panel - convenient!
 
-test tes
-
 # Load libraries - add bslib. I also needed to update shiny.
 
 # After this step, publish to shinyapps.io to make sure it works.
@@ -65,13 +63,12 @@ stats_num <-
 # NOTE: I haven't made all the labels look nice - I should.
 
 ui <- fluidPage(
-  theme = bs_theme(primary = "#123B60", 
-                   secondary = "#D44420", 
+  theme = bs_theme(primary = "yellow", 
+                   secondary = "navy", 
                    base_font = list(font_google("Raleway"), "-apple-system", 
                                    "BlinkMacSystemFont", "Segoe UI", "Helvetica Neue", "Arial", 
                                    "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", 
-                                   "Segoe UI Symbol"), 
-                   bootswatch = "sketchy"),
+                                   "Segoe UI Symbol")),
   # Application title
   titlePanel("Ceteris Perabus Profile"),
   
@@ -84,7 +81,7 @@ ui <- fluidPage(
         'form.well { max-height: 600px; overflow-y: auto; }'
       )),
       sliderInput(inputId = "acc_now_delinq",
-                  label = "Number of accounts delinquent:",
+                  label = "Number of Accounts Delinquent:",
                   min = stats_num %>% 
                     filter(variable =="acc_now_delinq") %>% 
                     pull(min_val),
@@ -97,7 +94,7 @@ ui <- fluidPage(
                   step = 1, 
                   round = TRUE),
       sliderInput(inputId = "all_util",
-                  label = "Balance to credit limit:",
+                  label = "Balance to Credit Limit:",
                   min = stats_num %>% 
                     filter(variable =="all_util") %>% 
                     pull(min_val) %>% 
@@ -112,7 +109,7 @@ ui <- fluidPage(
                     round(digits = -1), 
                   step = 10),
       sliderInput(inputId = "annual_inc",
-                  label = "Annual income:",
+                  label = "Annual Income:",
                   min = stats_num %>% 
                     filter(variable =="annual_inc") %>% 
                     pull(min_val) %>% 
@@ -127,7 +124,7 @@ ui <- fluidPage(
                     round(digits = -4), 
                   step = 10000),
       sliderInput(inputId = "delinq_2yrs",
-                  label = "# of 30+ days past-due incideces for past 2 yrs:",
+                  label = "Number of 30+ Days Past-due Incideces for Past 2 Yrs:",
                   min = stats_num %>% 
                     filter(variable =="delinq_2yrs") %>% 
                     pull(min_val),
@@ -140,7 +137,7 @@ ui <- fluidPage(
                   step = 1, 
                   round = TRUE),
       sliderInput(inputId = "delinq_amnt",
-                  label = "Past due amount owed:",
+                  label = "Past Due Amount Owed:",
                   min = stats_num %>% 
                     filter(variable =="delinq_amnt") %>% 
                     pull(min_val),
@@ -153,7 +150,7 @@ ui <- fluidPage(
                   step = 1000, 
                   round = TRUE),
       sliderInput(inputId = "funded_amnt",
-                  label = "Funded amount:",
+                  label = "Funded Amount:",
                   min = stats_num %>% 
                     filter(variable =="funded_amnt") %>% 
                     pull(min_val) %>% 
@@ -259,7 +256,7 @@ ui <- fluidPage(
                   step = 1, 
                   round = TRUE),
       sliderInput(inputId = "revol_util",
-                  label = "Revolving line utilization rate:",
+                  label = "Revolving Line Utilization Rate:",
                   min = stats_num %>% 
                     filter(variable =="revol_util") %>% 
                     pull(min_val),
@@ -272,7 +269,7 @@ ui <- fluidPage(
                   step = 2, 
                   round = TRUE),
       sliderInput(inputId = "int_rate",
-                  label = "Interest rate:",
+                  label = "Interest Rate:",
                   min = stats_num %>% 
                     filter(variable =="int_rate") %>% 
                     pull(min_val)%>% 
@@ -288,7 +285,7 @@ ui <- fluidPage(
                   step = .1, 
                   round = TRUE),
       sliderInput(inputId = "total_bal_il",
-                  label = "Total current balance of installment accts:",
+                  label = "Total Current Balance of Installment Accts:",
                   min = stats_num %>% 
                     filter(variable =="total_bal_il") %>% 
                     pull(min_val) %>% 
@@ -303,7 +300,7 @@ ui <- fluidPage(
                     round(digits = -4), 
                   step = 10000),
       sliderInput(inputId = "total_il_high_credit_limit",
-                  label = "Total installments high credit/credit limit:",
+                  label = "Total Installments High Credit/Credit Limit:",
                   min = stats_num %>% 
                     filter(variable =="total_il_high_credit_limit") %>% 
                     pull(min_val) %>% 
@@ -321,10 +318,10 @@ ui <- fluidPage(
                   label = "State:", 
                   choices = states),
       selectInput(inputId = "emp_length", 
-                  label = "Employment length:", 
+                  label = "Employment Length:", 
                   choices = emp_len),
       selectInput(inputId = "sub_grade", 
-                  label = "LC assigned loan subgrade:", 
+                  label = "LC Assigned Loan Subgrade:", 
                   choices = lending_club %>% 
                     select(sub_grade) %>% 
                     distinct() %>% 
@@ -345,7 +342,7 @@ ui <- fluidPage(
                     arrange(verification_status) %>% 
                     pull(verification_status)),
       selectInput(inputId = "var",
-                  label = "Variable to vary in the plot:",
+                  label = "Variable to Vary in the Plot:",
                   choices = list(Income = "annual_inc",
                                  `Interest rate` =  "int_rate",
                                  `Funded amount` = "funded_amnt")),
@@ -364,6 +361,8 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   output$cp_plot <- renderPlot({
+    
+      
     
       obs <- tibble(funded_amnt = input$funded_amnt, 
                     term = input$term, 
@@ -421,10 +420,14 @@ server <- function(input, output) {
           ) %>% 
           ggplot(aes(x = .data[[input$var]],
                      y = .pred_good)) +
-          geom_line() +
-          labs(title = "Predicted probability of loan fully paid back \nor currently on-time",
+          geom_line(color = "red") +
+          labs(title = "Predicted Probability of a Loan Being Fully Paid Back \nOr Being Paid Currently On-time",
                y = NULL) +
-          theme_minimal()
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank(), 
+                plot.background = element_rect(fill = "white"), 
+                )
       } else {
     obs_many %>% 
       select(.data[[input$var]]) %>% 
@@ -435,10 +438,13 @@ server <- function(input, output) {
       ) %>% 
       ggplot(aes(x = .data[[input$var]],
                  y = .pred_good)) +
-      geom_line() +
-      labs(title = "Predicted probability of loan fully paid back \nor currently on-time",
+      geom_line(color = "red") +
+      labs(title = "Predicted Probability of a Loan Being Fully Paid Back \nOr Being Paid Currently On-time",
            y = NULL) +
-      theme_minimal()
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank(), 
+                plot.background = element_rect(fill = "white"))
       }
   })
 }
